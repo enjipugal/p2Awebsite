@@ -514,7 +514,6 @@
 
     .btn--primary:hover{ opacity:.95; }
 
-    /* Success box style (like your screenshot) */
     .successBox{
       display:none;
       margin-top: 14px;
@@ -560,6 +559,7 @@
       background: var(--footerBlue);
       color:#ffffff;
     }
+    
     .footer__inner{
       display:flex;
       gap: 14px;
@@ -617,7 +617,6 @@
 <body>
   <a class="skipLink" href="#home">Skip to content</a>
 
-  <!-- HEADER -->
   <header class="header">
     <div class="containerX header__inner">
       <a class="logoWrap" href="https://www.panpacificu.edu.ph/" target="_blank" rel="noopener noreferrer" aria-label="Panpacific University Website">
@@ -637,7 +636,6 @@
     </div>
   </header>
 
-  <!-- HOME -->
   <main id="home" class="hero">
     <div class="floatWrap" aria-hidden="true">
       <div class="floatObj d1" style="left:8%; top:18%;">🌿</div>
@@ -672,7 +670,6 @@
     </div>
   </main>
 
-  <!-- ABOUT -->
   <section id="about" class="section">
     <div class="containerX">
       <div class="sectionHead">
@@ -702,7 +699,6 @@
     </div>
   </section>
 
-  <!-- ACTIVITIES -->
   <section id="activities" class="section">
     <div class="containerX">
       <div class="sectionHead">
@@ -758,7 +754,6 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section id="contact" class="section">
     <div class="containerX">
       <div class="sectionHead">
@@ -769,17 +764,16 @@
       <div class="contactGrid">
         <div class="cardX">
 
-          <!-- UPDATED: Uses Netlify Function (Resend) -->
-          <form id="contactForm">
+          <form id="contactForm" novalidate>
             <div style="display:grid; gap:12px;">
               <div class="field">
                 <label for="name">Full Name</label>
-                <input id="name" name="name" required placeholder="e.g., Juan Dela Cruz" />
+                <input id="name" name="name" required placeholder="e.g., Juan Dela Cruz" autocomplete="name" />
               </div>
 
               <div class="field">
                 <label for="email">Email</label>
-                <input id="email" name="email" type="email" required placeholder="name@example.com" />
+                <input id="email" name="email" type="email" required placeholder="name@example.com" autocomplete="email" />
               </div>
 
               <div class="field">
@@ -877,7 +871,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="containerX footer__inner">
       <div><small>Internationalization (IZN) Office</small></div>
@@ -890,27 +883,50 @@
       const logo = document.querySelector(".logoImg");
       if (logo) logo.classList.add("logoEnter");
 
-      // UPDATED: submit contact form to Netlify Function (Resend)
       const form = document.getElementById("contactForm");
       const successBox = document.getElementById("successBox");
       const errorBox = document.getElementById("errorBox");
       const sending = document.getElementById("sending");
       const submitBtn = document.getElementById("submitBtn");
 
+      function setSendingState(isSending){
+        if (sending) sending.style.display = isSending ? "inline" : "none";
+        if (submitBtn) submitBtn.disabled = isSending;
+      }
+
+      function showSuccess(){
+        if (successBox) successBox.style.display = "block";
+        if (errorBox) errorBox.style.display = "none";
+      }
+
+      function showError(msg){
+        if (successBox) successBox.style.display = "none";
+        if (errorBox){
+          errorBox.textContent = msg || "Something went wrong. Please try again.";
+          errorBox.style.display = "block";
+        }
+      }
+
       if (form) {
         form.addEventListener("submit", async (e) => {
           e.preventDefault();
 
-          if (successBox) successBox.style.display = "none";
-          if (errorBox) errorBox.style.display = "none";
-          if (sending) sending.style.display = "inline";
-          if (submitBtn) submitBtn.disabled = true;
+          const nameEl = document.getElementById("name");
+          const emailEl = document.getElementById("email");
+          const msgEl = document.getElementById("msg");
 
           const payload = {
-            name: document.getElementById("name").value.trim(),
-            email: document.getElementById("email").value.trim(),
-            message: document.getElementById("msg").value.trim(),
+            name: (nameEl?.value || "").trim(),
+            email: (emailEl?.value || "").trim(),
+            message: (msgEl?.value || "").trim(),
           };
+
+          if (!payload.name || !payload.email || !payload.message) {
+            showError("Please fill out all fields.");
+            return;
+          }
+
+          setSendingState(true);
 
           try {
             const res = await fetch("/.netlify/functions/send-email", {
@@ -919,15 +935,19 @@
               body: JSON.stringify(payload),
             });
 
-            if (!res.ok) throw new Error("Request failed");
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok || data.success !== true) {
+              throw new Error(data?.error || `Request failed (${res.status})`);
+            }
 
             form.reset();
-            if (successBox) successBox.style.display = "block";
+            showSuccess();
           } catch (err) {
-            if (errorBox) errorBox.style.display = "block";
+            console.error(err);
+            showError("Something went wrong. Please try again.");
           } finally {
-            if (sending) sending.style.display = "none";
-            if (submitBtn) submitBtn.disabled = false;
+            setSendingState(false);
           }
         });
       }
