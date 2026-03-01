@@ -4,7 +4,6 @@ function parseBody(event) {
   const ct = (event.headers?.["content-type"] || event.headers?.["Content-Type"] || "").toLowerCase();
   const raw = event.body || "";
 
-  // Netlify Forms default: application/x-www-form-urlencoded
   if (ct.includes("application/x-www-form-urlencoded")) {
     const params = new URLSearchParams(raw);
     return {
@@ -14,7 +13,6 @@ function parseBody(event) {
     };
   }
 
-  // JSON (if you're using fetch)
   if (ct.includes("application/json")) {
     try {
       const obj = JSON.parse(raw);
@@ -28,7 +26,6 @@ function parseBody(event) {
     }
   }
 
-  // Fallback: try JSON, else empty
   try {
     const obj = JSON.parse(raw);
     return {
@@ -39,6 +36,15 @@ function parseBody(event) {
   } catch {
     return { name: "", email: "", message: "" };
   }
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 export async function handler(event) {
@@ -56,9 +62,25 @@ export async function handler(event) {
     return { statusCode: 500, body: "Missing TO_EMAIL env var" };
   }
 
+  const adminTo = (TO_EMAIL || "").split(",")[0].trim();
+
+  console.log("TO_EMAIL raw:", JSON.stringify(TO_EMAIL));
+  console.log("TO_EMAIL cleaned:", JSON.stringify(adminTo));
+
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(adminTo)) {
+    return {
+      statusCode: 500,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        success: false,
+        error: "Invalid TO_EMAIL format in environment variables.",
+        adminTo,
+      }),
+    };
+  }
+
   const { name, email, message } = parseBody(event);
 
-  // Basic validation
   if (!name || !email || !message) {
     return { statusCode: 400, body: "Missing required fields" };
   }
@@ -66,29 +88,32 @@ export async function handler(event) {
   const resend = new Resend(RESEND_API_KEY);
 
   try {
-    // 1) Send to admin inbox
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeMsg = escapeHtml(message).replace(/\n/g, "<br/>");
+
     const adminRes = await resend.emails.send({
       from: "P2A Journey <onboarding@resend.dev>",
-      to: TO_EMAIL,
+      to: adminTo,
       subject: "New Inquiry Received - P2A Journey",
       html: `
         <h2>New Inquiry</h2>
-        <p><b>Name:</b> ${name}</p>
-        <p><b>Email:</b> ${email}</p>
-        <p><b>Message:</b><br/>${String(message).replace(/\n/g, "<br/>")}</p>
+        <p><b>Name:</b> ${safeName}</p>
+        <p><b>Email:</b> ${safeEmail}</p>
+        <p><b>Message:</b><br/>${safeMsg}</p>
       `,
+      
       replyTo: email,
     });
 
     console.log("Admin email response:", adminRes);
 
-    // 2) Auto-reply to sender
     const autoRes = await resend.emails.send({
       from: "P2A Journey <onboarding@resend.dev>",
-      to: email,
+      to: email.trim(),
       subject: "Thank you for your inquiry - Panpacific University",
       html: `
-        <p>Dear ${name},</p>
+        <p>Dear ${safeName},</p>
         <p>Thank you for contacting the Internationalization (IZN) Office of Panpacific University.</p>
         <p>We have received your inquiry and will respond as soon as possible.</p>
         <p>Regards,<br/>Internationalization (IZN) Office<br/>Panpacific University</p>
@@ -96,6 +121,18 @@ export async function handler(event) {
     });
 
     console.log("Auto-reply response:", autoRes);
+
+    if (adminRes?.error) {
+      return {
+        statusCode: 502,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          success: false,
+          error: adminRes.error,
+          note: "Auto-reply may have been sent, but admin email failed.",
+        }),
+      };
+    }
 
     return {
       statusCode: 200,
