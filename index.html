@@ -769,16 +769,8 @@
       <div class="contactGrid">
         <div class="cardX">
 
-          <form name="contact"
-                method="POST"
-                data-netlify="true"
-                netlify-honeypot="bot-field"
-                action="/?sent=1#contact">
-            <input type="hidden" name="form-name" value="contact" />
-            <p style="display:none;">
-              <label>Don’t fill this out: <input name="bot-field" /></label>
-            </p>
-
+          <!-- UPDATED: Uses Netlify Function (Resend) -->
+          <form id="contactForm">
             <div style="display:grid; gap:12px;">
               <div class="field">
                 <label for="name">Full Name</label>
@@ -796,17 +788,21 @@
               </div>
 
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <button class="btn btn--primary" type="submit">Submit</button>
+                <button class="btn btn--primary" type="submit" id="submitBtn">Submit</button>
+                <span id="sending" style="display:none; font-weight:900; color:rgba(15,23,42,.65);">Sending…</span>
               </div>
 
-              <!-- Success message (shows after Netlify redirect) -->
               <div id="successBox" class="successBox" role="status" aria-live="polite">
                 Inquiry received. Thank you!
               </div>
 
+              <div id="errorBox" style="display:none; margin-top:10px; font-weight:900; color:#b91c1c;">
+                Something went wrong. Please try again.
+              </div>
+
               <noscript>
                 <p style="margin:0; color:rgba(15,23,42,.75); font-weight:800;">
-                  JavaScript is disabled. The form will still submit.
+                  JavaScript is disabled. Please enable it to submit this form.
                 </p>
               </noscript>
             </div>
@@ -894,19 +890,46 @@
       const logo = document.querySelector(".logoImg");
       if (logo) logo.classList.add("logoEnter");
 
-      // Show success message after Netlify redirect (Option A)
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("sent") === "1") {
-        const box = document.getElementById("successBox");
-        if (box) {
-          box.style.display = "block";
-        }
-        // Optional: remove ?sent=1 from URL (keeps #contact)
-        try{
-          const url = new URL(window.location.href);
-          url.searchParams.delete("sent");
-          window.history.replaceState({}, "", url.pathname + url.search + url.hash);
-        }catch(e){}
+      // UPDATED: submit contact form to Netlify Function (Resend)
+      const form = document.getElementById("contactForm");
+      const successBox = document.getElementById("successBox");
+      const errorBox = document.getElementById("errorBox");
+      const sending = document.getElementById("sending");
+      const submitBtn = document.getElementById("submitBtn");
+
+      if (form) {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          if (successBox) successBox.style.display = "none";
+          if (errorBox) errorBox.style.display = "none";
+          if (sending) sending.style.display = "inline";
+          if (submitBtn) submitBtn.disabled = true;
+
+          const payload = {
+            name: document.getElementById("name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            message: document.getElementById("msg").value.trim(),
+          };
+
+          try {
+            const res = await fetch("/.netlify/functions/send-email", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) throw new Error("Request failed");
+
+            form.reset();
+            if (successBox) successBox.style.display = "block";
+          } catch (err) {
+            if (errorBox) errorBox.style.display = "block";
+          } finally {
+            if (sending) sending.style.display = "none";
+            if (submitBtn) submitBtn.disabled = false;
+          }
+        });
       }
 
       document.querySelectorAll("[data-carousel]").forEach((car) => {
