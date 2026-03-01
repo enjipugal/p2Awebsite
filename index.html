@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>P2A Journey</title>
+  <meta name="description" content="Panpacific University accommodates International Schools Sustainable Tourism 2026." />
+  <meta name="theme-color" content="#406F27" />
+
+  <style>
+    :root{
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:rgba(15,23,42,.12);
+      --shadow: 0 14px 40px rgba(2,6,23,.10);
+      --headerGreen:#406F27;
+      --footerBlue:#263F77;
+      --radius:18px;
+      --container:1120px;
+      --cardBg: rgba(255,255,255,.94);
+      --overlay: rgba(0,0,0,.28);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      overflow-x:hidden;
+      background-image: url("sustainable-tourism.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      background: var(--overlay);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .header{ position: sticky; top:0; z-index:50; }
+    main, section, footer{ position: relative; z-index: 1; }
+
+    a{ color:inherit; text-decoration:none; }
+
+    .skipLink{
+      position:absolute;
+      left:-999px;
+      top:auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+    }
+
+    .skipLink:focus{
+      left:12px;
+      top:12px;
+      width:auto;
+      height:auto;
+      padding:10px 12px;
+      background:#fff;
+      border-radius:12px;
+      z-index:9999;
+      box-shadow: var(--shadow);
+    }
+
+    .containerX{
+      width:min(var(--container), calc(100% - 32px));
+      margin:0 auto;
+    }
+
+    .header{
+      background: var(--headerGreen);
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .header__inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 0;
+      flex-wrap: wrap;
+    }
+
+    .logoWrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 210px;
+      max-width: 100%;
+    }
+
+    .logoImg{
+      width:38px;
+      height:38px;
+      border-radius: 12px;
+      object-fit: contain;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.35);
+      padding: 6px;
+      box-shadow: 0 10px 24px rgba(2,6,23,.18);
+      flex: 0 0 auto;
+
+      transform: translateY(-10px) scale(.85);
+      opacity: 0;
+      filter: blur(2px);
+    }
+
+    .logoImg.logoEnter{
+      animation: logoPop .75s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+
+    @keyframes logoPop{
+      0%   { transform: translateY(-10px) scale(.85); opacity: 0; filter: blur(2px); }
+      60%  { transform: translateY(2px) scale(1.05); opacity: 1; filter: blur(0); }
+      100% { transform: translateY(0) scale(1); opacity: 1; filter: blur(0); }
+    }
+
+    .brandText{
+      display:flex;
+      flex-direction:column;
+      line-height:1.1;
+      min-width: 0;
+    }
+
+    .brandText__title{
+      font-weight:1000;
+      letter-spacing:.2px;
+      font-size:14px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      color:#ffffff;
+    }
+
+    .brandText__sub{
+      font-size:12px;
+      color: rgba(255,255,255,.82);
+      margin-top:4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      font-weight:900;
+      font-size:13px;
+      color: rgba(255,255,255,.92);
+      padding:10px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      transition: background .15s ease, border-color .15s ease, opacity .15s ease;
+      white-space:nowrap;
+    }
+
+    .nav a:hover{
+      background: rgba(255,255,255,.14);
+      border-color: rgba(255,255,255,.22);
+    }
+
+    .hero{
+      position:relative;
+      padding: 64px 0 40px;
+      min-height: calc(100vh - 70px);
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+      background: transparent;
+    }
+
+    .floatWrap{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .floatObj{
+      position:absolute;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 40px rgba(2,6,23,.18);
+      backdrop-filter: blur(10px);
+      font-size: 34px;
+      animation: drift 16s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .floatObj.small{ width:56px; height:56px; font-size:28px; border-radius:18px; }
+    .floatObj.tiny{ width:46px; height:46px; font-size:24px; border-radius:16px; }
+
+    @keyframes drift{
+      0%   { transform: translate3d(0,0,0) rotate(0deg); }
+      50%  { transform: translate3d(0,-16px,0) rotate(6deg); }
+      100% { transform: translate3d(0,0,0) rotate(0deg); }
+    }
+
+    .d1{ animation-duration: 14s; }
+    .d2{ animation-duration: 18s; }
+    .d3{ animation-duration: 22s; }
+    .d4{ animation-duration: 26s; }
+
+    .heroBlock{
+      position:relative;
+      z-index:2;
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      gap: 12px;
+    }
+
+    .heroTitle{
+      margin:0;
+      font-weight: 1000;
+      color:#ffffff;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: clamp(34px, 5vw, 78px);
+      line-height: 1.02;
+      text-shadow: 0 14px 30px rgba(0,0,0,.45);
+    }
+
+    .heroSub{
+      margin:0;
+      max-width: 62ch;
+      color: rgba(255,255,255,.88);
+      font-size: 15px;
+      line-height: 1.6;
+      text-shadow: 0 10px 24px rgba(0,0,0,.35);
+    }
+
+    .heroTags{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      justify-content:center;
+      max-width: 900px;
+      margin: 6px auto 0;
+    }
+
+    .tagPill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.28);
+      background: var(--footerBlue);
+      color: #ffffff;
+      font-weight: 1000;
+      font-size: 13px;
+      white-space: nowrap;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+
+    section{ scroll-margin-top: 88px; }
+    .section{ padding: 46px 0; }
+
+    .sectionHead{
+      text-align:center;
+      margin-bottom: 18px;
+    }
+
+    .sectionHead h2{
+      margin:0 0 10px;
+      font-size: 28px;
+      letter-spacing:-.01em;
+      color:#ffffff;
+      text-shadow: 0 12px 26px rgba(0,0,0,.35);
+    }
+
+    .sectionHead p{
+      margin:0 auto;
+      max-width: 70ch;
+      color: rgba(255,255,255,.85);
+      line-height: 1.7;
+      text-shadow: 0 12px 26px rgba(0,0,0,.28);
+    }
+
+    .cardX{
+      background: var(--cardBg);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      min-width: 0;
+    }
+
+    .carousel{ position: relative; margin-top: 18px; }
+    .carousel__viewport{ overflow: hidden; border-radius: 22px; }
+    .carousel__track{
+      display:flex;
+      gap: 18px;
+      scroll-behavior: smooth;
+      padding: 6px 8px 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-snap-type: x mandatory;
+    }
+
+    .carousel__track::-webkit-scrollbar{ display:none; }
+
+    .slide{
+      flex: 0 0 calc((100% - 36px) / 3);
+      scroll-snap-align: start;
+      min-width: 0;
+    }
+
+    .aboutCard{
+      height: 100%;
+      background: #ffffff;
+      border: 1px solid rgba(15,23,42,.14);
+      border-radius: 22px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 10px 24px rgba(2,6,23,.08);
+    }
+
+    .aboutCard h3{
+      margin: 0 0 8px;
+      font-size: 22px;
+      font-weight: 1000;
+      letter-spacing: -.01em;
+      color:#0f172a;
+    }
+
+    .aboutCard p{
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.65;
+      color: rgba(15,23,42,.65);
+    }
+
+    .carBtn{
+      position:absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.14);
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 14px 30px rgba(2,6,23,.10);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 18px;
+      font-weight: 1000;
+      color:#0f172a;
+      transition: transform .12s ease, opacity .12s ease;
+      user-select:none;
+    }
+
+    .carBtn:active{ transform: translateY(-50%) scale(.98); }
+    .carBtn[disabled]{ opacity:.4; cursor:not-allowed; }
+    .carBtn--prev{ left: -8px; }
+    .carBtn--next{ right: -8px; }
+
+    .dots{
+      display:flex;
+      justify-content:center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .dot{
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.55);
+      background: rgba(255,255,255,.18);
+      cursor:pointer;
+    }
+    .dot.isActive{ background: rgba(255,255,255,.78); }
+
+    .activitiesGrid{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 14px;
+      margin-top: 18px;
+      align-items: stretch;
+    }
+
+    .dayTitle{
+      margin:0 0 8px;
+      font-size: 14px;
+      letter-spacing:.12em;
+      text-transform: uppercase;
+      color: rgba(15,23,42,.55);
+      font-weight: 1000;
+    }
+
+    .dayHead{
+      margin:0 0 10px;
+      font-size: 18px;
+      font-weight: 1000;
+      color: var(--text);
+      line-height: 1.25;
+      white-space: normal;
+      overflow: visible;
+      word-break: normal;
+    }
+
+    .collage{ display:grid; gap: 8px; margin: 12px 0 12px; }
+    .collage.two{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+    .ph{
+      width:100%;
+      height: 110px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: rgba(2,6,23,.035);
+      box-shadow: 0 10px 24px rgba(2,6,23,.06);
+      overflow:hidden;
+      position: relative;
+    }
+
+    .ph img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    .seeMore{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      margin-top: 10px;
+      font-weight: 1000;
+      font-size: 13px;
+      color: #0f172a;
+      opacity: .9;
+    }
+
+    .seeMore:hover{ opacity: 1; text-decoration: underline; }
+
+    .contactGrid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      margin-top: 18px;
+      align-items:start;
+    }
+
+    .field label{
+      font-weight:1000;
+      font-size:13px;
+      display:block;
+    }
+
+    .field input, .field textarea{
+      width:100%;
+      margin-top:6px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#ffffff;
+      font: inherit;
+      outline:none;
+    }
+
+    .field textarea{ resize:vertical; }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor:pointer;
+      font-weight: 900;
+      transition: transform .12s ease, opacity .12s ease;
+      user-select:none;
+    }
+
+    .btn:active{ transform: translateY(1px); }
+
+    .btn--primary{
+      background: var(--headerGreen);
+      color: #ffffff;
+      box-shadow: 0 16px 40px rgba(64,111,39,.25);
+    }
+
+    .btn--primary:hover{ opacity:.95; }
+
+    /* Success box style (like your screenshot) */
+    .successBox{
+      display:none;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(64,111,39,.12);
+      border: 1px solid rgba(64,111,39,.35);
+      font-weight: 1000;
+      color: rgba(15,23,42,.78);
+    }
+
+    .infoList{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display:grid;
+      gap: 12px;
+      color: rgba(15,23,42,.78);
+      line-height: 1.5;
+    }
+
+    .infoItem{ display:flex; gap: 10px; align-items:flex-start; }
+    .icon{ width: 18px; height: 18px; flex: 0 0 auto; margin-top: 2px; color: rgba(15,23,42,.80); }
+    .infoLinks a{ text-decoration: underline; text-underline-offset: 3px; }
+
+    .mapWrap{
+      margin-top: 12px;
+      border-radius: 16px;
+      overflow:hidden;
+      border: 1px solid rgba(15,23,42,.12);
+      box-shadow: 0 10px 24px rgba(2,6,23,.06);
+    }
+    .mapWrap iframe{
+      width:100%;
+      height: 210px;
+      border:0;
+      display:block;
+    }
+
+    .footer{
+      border-top: 1px solid rgba(255,255,255,.18);
+      padding: 24px 0;
+      background: var(--footerBlue);
+      color:#ffffff;
+    }
+    .footer__inner{
+      display:flex;
+      gap: 14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .footer small{ color: rgba(255,255,255,.90); }
+
+    @media (max-width: 980px){
+      .slide{ flex: 0 0 calc((100% - 18px) / 2); }
+      .carBtn--prev{ left: 2px; }
+      .carBtn--next{ right: 2px; }
+      .activitiesGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+
+    @media (max-width: 920px){
+      .header__inner{ justify-content:center; row-gap: 10px; }
+      .logoWrap{ min-width: unset; flex: 1 1 320px; justify-content:center; }
+      .nav{ width: 100%; justify-content:center; gap: 6px; }
+      .nav a{ padding: 9px 10px; font-size: 12.5px; }
+      .hero{ padding: 52px 0 34px; min-height: calc(100vh - 110px); }
+      .contactGrid{ grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px){
+      .slide{ flex: 0 0 100%; }
+      .carBtn{ display:none; }
+      .activitiesGrid{ grid-template-columns: 1fr; }
+      .ph{ height: 140px; }
+      .floatWrap{ opacity: .65; }
+    }
+
+    @media (max-width: 520px){
+      .containerX{ width: min(var(--container), calc(100% - 22px)); }
+      .brandText__title{ font-size: 13px; }
+      .brandText__sub{ font-size: 11px; }
+      .logoImg{ width:36px; height:36px; border-radius: 12px; padding:6px; }
+      .floatObj{ width:58px; height:58px; font-size:28px; }
+      .heroSub{ font-size: 14px; }
+      .aboutCard h3{ font-size: 20px; }
+      .aboutCard p{ font-size: 15px; }
+      .dayHead{ font-size: 16px; }
+      .sectionHead h2{ font-size: 24px; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .floatObj{ animation: none !important; }
+      .logoImg{ animation: none !important; opacity: 1; transform:none; filter:none; }
+      .carousel__track{ scroll-behavior: auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skipLink" href="#home">Skip to content</a>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="containerX header__inner">
+      <a class="logoWrap" href="https://www.panpacificu.edu.ph/" target="_blank" rel="noopener noreferrer" aria-label="Panpacific University Website">
+        <img class="logoImg" src="pu-logo.png" alt="Panpacific University Logo" />
+        <div class="brandText">
+          <div class="brandText__title">Panpacific University</div>
+          <div class="brandText__sub">Urdaneta City, Pangasinan, Philippines</div>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Main Navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#activities">Activities</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <main id="home" class="hero">
+    <div class="floatWrap" aria-hidden="true">
+      <div class="floatObj d1" style="left:8%; top:18%;">🌿</div>
+      <div class="floatObj small d2" style="left:18%; top:62%;">♻️</div>
+      <div class="floatObj tiny d3" style="left:10%; top:78%;">🚲</div>
+      <div class="floatObj d2" style="left:34%; top:12%;">🌎</div>
+      <div class="floatObj small d4" style="left:44%; top:74%;">🏞️</div>
+      <div class="floatObj d3" style="left:62%; top:16%;">🌱</div>
+      <div class="floatObj small d1" style="left:70%; top:64%;">🚶</div>
+      <div class="floatObj d4" style="left:82%; top:22%;">🚌</div>
+      <div class="floatObj tiny d2" style="left:88%; top:52%;">💧</div>
+      <div class="floatObj small d3" style="left:80%; top:82%;">🗺️</div>
+      <div class="floatObj tiny d4" style="left:54%; top:36%;">🌾</div>
+      <div class="floatObj small d3" style="left:26%; top:34%;">🏛️</div>
+    </div>
+
+    <div class="containerX">
+      <div class="heroBlock">
+        <h1 class="heroTitle">SUSTAIN THE JOURNEY</h1>
+        <p class="heroSub">Building responsible tourism for a sustainable future.</p>
+
+        <div class="heroTags" aria-label="BORDERS Meanings">
+          <span class="tagPill">Bridge</span>
+          <span class="tagPill">Openness</span>
+          <span class="tagPill">Respect</span>
+          <span class="tagPill">Dialogue</span>
+          <span class="tagPill">Exchange</span>
+          <span class="tagPill">Responsibility</span>
+          <span class="tagPill">Sustainability</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <div class="containerX">
+      <div class="sectionHead">
+        <h2>About the Program</h2>
+        <p>
+          Brings PU and international schools together for cultural exchange, sustainability learning,
+          and field immersion designed to build global collaboration and responsible tourism practices.
+        </p>
+      </div>
+
+      <div class="carousel" data-carousel="about">
+        <button class="carBtn carBtn--prev" type="button" aria-label="Previous" data-prev>&larr;</button>
+        <button class="carBtn carBtn--next" type="button" aria-label="Next" data-next>&rarr;</button>
+
+        <div class="carousel__viewport">
+          <div class="carousel__track" data-track>
+            <div class="slide"><div class="aboutCard"><h3>Cross-Cultural Understanding</h3><p>Strengthen openness and respect through community-based learning, campus engagements, and cultural experiences.</p></div></div>
+            <div class="slide"><div class="aboutCard"><h3>Environmental Sustainability</h3><p>Explore eco-sites and sustainability practices aligned with responsible travel and environmental protection.</p></div></div>
+            <div class="slide"><div class="aboutCard"><h3>Global Collaboration</h3><p>Encourage international partnership-building through shared outputs, reflections, and presentations.</p></div></div>
+            <div class="slide"><div class="aboutCard"><h3>Community Immersion</h3><p>Engage with local communities to appreciate heritage, livelihoods, and responsible tourism practices.</p></div></div>
+            <div class="slide"><div class="aboutCard"><h3>Responsible Travel Skills</h3><p>Build practical habits in ethical travel, waste reduction, and sustainability-centered decision-making.</p></div></div>
+          </div>
+        </div>
+
+        <div class="dots" aria-label="Carousel Pagination" data-dots></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVITIES -->
+  <section id="activities" class="section">
+    <div class="containerX">
+      <div class="sectionHead">
+        <h2>Activities</h2>
+        <p>Take a look at what’s coming up on your journey!</p>
+      </div>
+
+      <div class="activitiesGrid">
+        <div class="cardX">
+          <div class="dayTitle">Day 1</div>
+          <div class="dayHead">Opening Program • Campus Tour</div>
+          <div class="collage two" aria-label="Day 1 Photo Collage">
+            <div class="ph"><img src="day1-1.jpg" alt="Day 1 photo 1" onerror="this.remove(); this.parentElement.textContent='Image 1';"></div>
+            <div class="ph"><img src="campus-urdaneta.webp" alt="Day 1 photo 2" onerror="this.remove(); this.parentElement.textContent='Image 2';"></div>
+          </div>
+          <p>Welcome activities, orientation, and an introduction to Panpacific University and its sustainability initiatives.</p>
+          <a class="seeMore" href="day1.html" target="_blank" rel="noopener noreferrer">See more →</a>
+        </div>
+
+        <div class="cardX">
+          <div class="dayTitle">Day 2</div>
+          <div class="dayHead">Cultural Exchange • SDG Talks</div>
+          <div class="collage two" aria-label="Day 2 Photo Collage">
+            <div class="ph"><img src="day2-1.webp" alt="Day 2 photo 1" onerror="this.remove(); this.parentElement.textContent='Image 1';"></div>
+            <div class="ph"><img src="day2-2.jpg" alt="Day 2 photo 2" onerror="this.remove(); this.parentElement.textContent='Image 2';"></div>
+          </div>
+          <p>Filipino language introduction (Baybayin), cultural history, and interactive cultural demonstrations.</p>
+          <a class="seeMore" href="day2.html" target="_blank" rel="noopener noreferrer">See more →</a>
+        </div>
+
+        <div class="cardX">
+          <div class="dayTitle">Day 3</div>
+          <div class="dayHead">Sustainability Study Tour</div>
+          <div class="collage two" aria-label="Day 3 Photo Collage">
+            <div class="ph"><img src="day3-1.jpg" alt="Day 3 photo 1" onerror="this.remove(); this.parentElement.textContent='Image 1';"></div>
+            <div class="ph"><img src="day3-2.jpg" alt="Day 3 photo 2" onerror="this.remove(); this.parentElement.textContent='Image 2';"></div>
+          </div>
+          <p>Immersion visit to eco/heritage sites to learn responsible tourism in real community settings.</p>
+          <a class="seeMore" href="day3.html" target="_blank" rel="noopener noreferrer">See more →</a>
+        </div>
+
+        <div class="cardX">
+          <div class="dayTitle">Day 4</div>
+          <div class="dayHead">Community Engagement</div>
+          <div class="collage two" aria-label="Day 4 Photo Collage">
+            <div class="ph"><img src="campus-tayug.webp" alt="Day 4 photo 1" onerror="this.remove(); this.parentElement.textContent='Image 1';"></div>
+            <div class="ph"><img src="day4-2.png" alt="Day 4 photo 2" onerror="this.remove(); this.parentElement.textContent='Image 2';"></div>
+          </div>
+          <p>Volunteer and outreach activities that highlight responsible tourism, local culture, and environmental care.</p>
+          <a class="seeMore" href="day4.html" target="_blank" rel="noopener noreferrer">See more →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <div class="containerX">
+      <div class="sectionHead">
+        <h2>Contact</h2>
+        <p>For further information and inquiries, please fill out the form below, and we'll get back to you as soon as possible.</p>
+      </div>
+
+      <div class="contactGrid">
+        <div class="cardX">
+
+          <form name="contact"
+                method="POST"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+                action="/?sent=1#contact">
+            <input type="hidden" name="form-name" value="contact" />
+            <p style="display:none;">
+              <label>Don’t fill this out: <input name="bot-field" /></label>
+            </p>
+
+            <div style="display:grid; gap:12px;">
+              <div class="field">
+                <label for="name">Full Name</label>
+                <input id="name" name="name" required placeholder="e.g., Juan Dela Cruz" />
+              </div>
+
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" required placeholder="name@example.com" />
+              </div>
+
+              <div class="field">
+                <label for="msg">Message</label>
+                <textarea id="msg" name="message" required rows="6" placeholder="Your inquiry..."></textarea>
+              </div>
+
+              <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <button class="btn btn--primary" type="submit">Submit</button>
+              </div>
+
+              <!-- Success message (shows after Netlify redirect) -->
+              <div id="successBox" class="successBox" role="status" aria-live="polite">
+                Inquiry received. Thank you!
+              </div>
+
+              <noscript>
+                <p style="margin:0; color:rgba(15,23,42,.75); font-weight:800;">
+                  JavaScript is disabled. The form will still submit.
+                </p>
+              </noscript>
+            </div>
+          </form>
+
+        </div>
+
+        <div class="cardX">
+          <h3 style="margin:0 0 10px;">Panpacific University</h3>
+
+          <ul class="infoList">
+            <li class="infoItem">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 22s7-5.2 7-12a7 7 0 0 0-14 0c0 6.8 7 12 7 12Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <div>
+                <b>Address:</b><br/>
+                McArthur Highway, San Vicente, Urdaneta City, Pangasinan, Philippines 2428
+              </div>
+            </li>
+
+            <li class="infoItem">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3 5.2 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L9 10.9a16 16 0 0 0 4.1 4.1l1.5-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6A2 2 0 0 1 22 16.9Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <div class="infoLinks">
+                <b>Phone:</b> <a href="tel:+63756327278">(075) 632 7278</a>
+              </div>
+            </li>
+
+            <li class="infoItem">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 4h16v16H4V4Z" stroke="currentColor" stroke-width="2"/>
+                <path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <div class="infoLinks">
+                <b>Email:</b> <a href="mailto:international.staff@panpacificu.edu.ph">international.staff@panpacificu.edu.ph</a>
+              </div>
+            </li>
+
+            <li class="infoItem">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M2 12h20" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 2c3 3 3 17 0 20" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <div class="infoLinks">
+                <b>Website:</b> <a href="https://www.panpacificu.edu.ph/" target="_blank" rel="noopener noreferrer">panpacificu.edu.ph</a>
+              </div>
+            </li>
+
+            <li class="infoItem">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 2H6a4 4 0 0 0-4 4v12a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4V6a4 4 0 0 0-4-4Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M9 22V12h3v10" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 12v-2a3 3 0 0 1 3-3h2" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <div class="infoLinks">
+                <b>Facebook:</b> <a href="https://www.facebook.com/panpacificu" target="_blank" rel="noopener noreferrer">facebook.com/panpacificu</a>
+              </div>
+            </li>
+          </ul>
+
+          <div class="mapWrap" aria-label="Map to Panpacific University">
+            <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Panpacific%20University%20Urdaneta&output=embed"
+              title="Panpacific University Map"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="containerX footer__inner">
+      <div><small>Internationalization (IZN) Office</small></div>
+      <div><small>All Rights Reserved (c) 2026</small></div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const logo = document.querySelector(".logoImg");
+      if (logo) logo.classList.add("logoEnter");
+
+      // Show success message after Netlify redirect (Option A)
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("sent") === "1") {
+        const box = document.getElementById("successBox");
+        if (box) {
+          box.style.display = "block";
+        }
+        // Optional: remove ?sent=1 from URL (keeps #contact)
+        try{
+          const url = new URL(window.location.href);
+          url.searchParams.delete("sent");
+          window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+        }catch(e){}
+      }
+
+      document.querySelectorAll("[data-carousel]").forEach((car) => {
+        const track = car.querySelector("[data-track]");
+        const prevBtn = car.querySelector("[data-prev]");
+        const nextBtn = car.querySelector("[data-next]");
+        const dotsWrap = car.querySelector("[data-dots]");
+        const slides = Array.from(track.querySelectorAll(".slide"));
+        let index = 0;
+
+        function getGapPx(){
+          const cs = getComputedStyle(track);
+          const gap = cs.columnGap || cs.gap || "0px";
+          return parseFloat(gap) || 0;
+        }
+
+        function slideStep(){
+          const first = slides[0];
+          if(!first) return 0;
+          const gap = getGapPx();
+          return first.getBoundingClientRect().width + gap;
+        }
+
+        function maxIndex(){
+          const viewport = car.querySelector(".carousel__viewport");
+          const vpW = viewport.getBoundingClientRect().width;
+          const step = slideStep() || 1;
+          const visible = Math.max(1, Math.round(vpW / step));
+          return Math.max(0, slides.length - visible);
+        }
+
+        function clampIndex(i){
+          const m = maxIndex();
+          return Math.max(0, Math.min(m, i));
+        }
+
+        function scrollToIndex(i, smooth=true){
+          index = clampIndex(i);
+          const step = slideStep();
+          const left = index * step;
+          track.scrollTo({ left, behavior: smooth ? "smooth" : "auto" });
+          renderDots();
+          updateButtons();
+        }
+
+        function updateButtons(){
+          const m = maxIndex();
+          if(prevBtn) prevBtn.disabled = index <= 0;
+          if(nextBtn) nextBtn.disabled = index >= m;
+        }
+
+        function renderDots(){
+          if(!dotsWrap) return;
+          const m = maxIndex();
+          const dotCount = m + 1;
+          dotsWrap.innerHTML = "";
+          for(let i=0;i<dotCount;i++){
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "dot" + (i===index ? " isActive" : "");
+            b.setAttribute("aria-label", "Go to position " + (i+1));
+            b.addEventListener("click", ()=> scrollToIndex(i));
+            dotsWrap.appendChild(b);
+          }
+        }
+
+        function snapFromScroll(){
+          const step = slideStep() || 1;
+          const i = Math.round(track.scrollLeft / step);
+          index = clampIndex(i);
+          renderDots();
+          updateButtons();
+        }
+
+        prevBtn && prevBtn.addEventListener("click", ()=> scrollToIndex(index - 1));
+        nextBtn && nextBtn.addEventListener("click", ()=> scrollToIndex(index + 1));
+
+        let t;
+        track.addEventListener("scroll", ()=>{
+          clearTimeout(t);
+          t = setTimeout(snapFromScroll, 80);
+        });
+
+        window.addEventListener("resize", ()=> scrollToIndex(index, false));
+
+        renderDots();
+        updateButtons();
+        scrollToIndex(0, false);
+      });
+    })();
+  </script>
+</body>
+</html>

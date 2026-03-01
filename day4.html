@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Day 4 • P2A Journey</title>
+
+  <style>
+    :root {
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:rgba(15,23,42,.12);
+      --shadow:0 14px 40px rgba(2,6,23,.08);
+
+      --headerGreen:#406F27;
+      --footerBlue:#263F77;
+
+      --radius:18px;
+      --container:1120px;
+    }
+
+    * { box-sizing:border-box; }
+    html, body { height:100%; }
+
+    body {
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--text);
+      overflow-x:hidden;
+
+      background-image:url("sustainable-tourism.jpg");
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      background-attachment:fixed;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      background:rgba(255,255,255,.78);
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .header {
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:var(--headerGreen);
+      border-bottom:1px solid rgba(255,255,255,.18);
+    }
+
+    main,
+    footer {
+      position:relative;
+      z-index:1;
+    }
+
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .containerX {
+      width:min(var(--container), calc(100% - 32px));
+      margin:0 auto;
+    }
+
+    .header__inner {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 0;
+      flex-wrap:wrap;
+    }
+
+    .logoWrap {
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .logoImg {
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      object-fit:contain;
+      background:#fff;
+      padding:6px;
+      transform:translateY(-10px) scale(.85);
+      opacity:0;
+      filter:blur(2px);
+    }
+
+    .logoImg.logoEnter {
+      animation:logoPop .75s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+
+    @keyframes logoPop {
+      0%   { transform:translateY(-10px) scale(.85); opacity:0; filter:blur(2px); }
+      60%  { transform:translateY(2px) scale(1.05); opacity:1; filter:blur(0); }
+      100% { transform:translateY(0) scale(1); opacity:1; filter:blur(0); }
+    }
+
+    .brandText__title {
+      font-weight:1000;
+      font-size:14px;
+      color:#fff;
+    }
+
+    .brandText__sub {
+      font-size:12px;
+      color:rgba(255,255,255,.85);
+    }
+
+    .nav {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nav a {
+      font-weight:900;
+      font-size:13px;
+      color:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid transparent;
+      transition:.15s ease;
+    }
+
+    .nav a:hover {
+      background:rgba(255,255,255,.15);
+      border-color:rgba(255,255,255,.2);
+    }
+
+    .wrap {
+      padding:34px 0 46px;
+    }
+
+    .card {
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .title {
+      margin:0 0 4px;
+      font-size:28px;
+      font-weight:1000;
+    }
+
+    .heading {
+      margin:26px 0 10px;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .sub {
+      margin:0 0 18px;
+      color:var(--muted);
+      line-height:1.7;
+      text-align:justify;
+    }
+
+    .collage {
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin:18px 0 10px;
+    }
+
+    .collage-item {
+      position:relative;
+      overflow:hidden;
+      border-radius:14px;
+      height:220px;
+      border:1px solid rgba(15,23,42,.10);
+      box-shadow:0 10px 24px rgba(2,6,23,.06);
+    }
+
+    .collage-item img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform .4s ease;
+    }
+
+    .collage-item:hover img {
+      transform:scale(1.08);
+    }
+
+    .footer {
+      background:var(--footerBlue);
+      color:#fff;
+      padding:24px 0;
+      margin-top:40px;
+    }
+
+    .footer small {
+      color:rgba(255,255,255,.9);
+    }
+
+    @media (max-width:768px) {
+      .collage {
+        grid-template-columns:1fr;
+      }
+
+      .collage-item {
+        height:220px;
+      }
+    }
+	
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="containerX header__inner">
+      <a class="logoWrap" href="https://www.panpacificu.edu.ph/" target="_blank">
+        <img class="logoImg" src="pu-logo.png" alt="PU Logo">
+        <div>
+          <div class="brandText__title">Panpacific University</div>
+          <div class="brandText__sub">Urdaneta City, Pangasinan, Philippines</div>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#activities">Activities</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="containerX">
+      <div class="card">
+
+        <h1 class="title">Day 4</h1>
+
+        <h3 class="heading">Campus Tour (Tayug)</h3>
+        <p class="sub"></p>
+
+        <div class="collage">
+          <div class="collage-item"><img src="campus-tayug.webp" alt=""></div>
+          <div class="collage-item"><img src="tayugcampus.png" alt=""></div>
+          <div class="collage-item"><img src="campust3.webp" alt=""></div>
+          <div class="collage-item"><img src="campusT2.webp" alt=""></div>
+        </div>
+
+        <h3 class="heading">Closing Ceremony</h3>
+        <p class="sub"></p>
+
+        <div class="collage">
+          <div class="collage-item"><img src="closing1.png" alt=""></div>
+          <div class="collage-item"><img src="closing2.png" alt=""></div>
+          <div class="collage-item"><img src="closing3.png" alt=""></div>
+          <div class="collage-item"><img src="closing4.png" alt=""></div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="containerX">
+      <small>All Rights Reserved © <span id="year"></span></small>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      const y = document.getElementById("year");
+      if (y) y.textContent = new Date().getFullYear();
+
+      const logo = document.querySelector(".logoImg");
+      if (logo) logo.classList.add("logoEnter");
+    })();
+  </script>
+
+</body>
+</html>
